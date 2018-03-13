@@ -15,8 +15,11 @@ function downloadVideo($id, $title, $url, $video)
         fclose($fp);
         return;
     }
+    
+    //$proxy = 'proxy.hinet.net:80';
 
     curl_setopt($ch, CURLOPT_URL, $url);
+    //curl_setopt($ch, CURLOPT_PROXY, $proxy);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST , false);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER , false);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -26,6 +29,7 @@ function downloadVideo($id, $title, $url, $video)
     curl_setopt($ch, CURLOPT_AUTOREFERER , true);
     curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36');
     curl_setopt($ch, CURLOPT_FILE, $fp);
+    
     $con = curl_exec($ch);
     curl_close($ch);
 

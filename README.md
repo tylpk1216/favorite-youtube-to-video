@@ -1,6 +1,6 @@
 Download Your favorite youtube video in PHP
 ==================
-this project is to download your favorite youtube video.
+This project is to download your favorite youtube video.
 
 
 How it works
@@ -12,4 +12,4 @@ How it works
 
 Note
 ---------------
-some files can't be downloaded.
+Some files can't be downloaded.

@@ -1,4 +1,4 @@
-Download Your favorite youtube video in PHP
+Download your favorite youtube video in PHP
 ==================
 This project is to download your favorite youtube video.
 

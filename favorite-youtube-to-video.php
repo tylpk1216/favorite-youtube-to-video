@@ -1,5 +1,7 @@
 <?php
 
+const USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36';
+
 function downloadVideo($id, $title, $url, $video)
 {
     $fp = fopen($video, "w");
@@ -24,7 +26,7 @@ function downloadVideo($id, $title, $url, $video)
     curl_setopt($ch, CURLOPT_HEADER , false);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION , true);
     curl_setopt($ch, CURLOPT_AUTOREFERER , true);
-    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36');
+    curl_setopt($ch, CURLOPT_USERAGENT, USER_AGENT);
     curl_setopt($ch, CURLOPT_FILE, $fp);
 
     $con = curl_exec($ch);

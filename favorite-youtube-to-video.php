@@ -32,6 +32,7 @@ function downloadVideo($id, $title, $url, $video)
     $err = curl_error($ch);
     if ($err !== '') {
         echo "$err \n";
+        curl_close($ch);
         fclose($fp);
         return;
     }

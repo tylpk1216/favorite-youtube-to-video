@@ -15,11 +15,8 @@ function downloadVideo($id, $title, $url, $video)
         fclose($fp);
         return;
     }
-    
-    //$proxy = 'proxy.hinet.net:80';
 
     curl_setopt($ch, CURLOPT_URL, $url);
-    //curl_setopt($ch, CURLOPT_PROXY, $proxy);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST , false);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER , false);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -29,10 +26,17 @@ function downloadVideo($id, $title, $url, $video)
     curl_setopt($ch, CURLOPT_AUTOREFERER , true);
     curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36');
     curl_setopt($ch, CURLOPT_FILE, $fp);
-    
-    $con = curl_exec($ch);
-    curl_close($ch);
 
+    $con = curl_exec($ch);
+
+    $err = curl_error($ch);
+    if ($err !== '') {
+        echo "$err \n";
+        fclose($fp);
+        return;
+    }
+
+    curl_close($ch);
     if ($con === false) {
         echo "$id $title download video error \n";
         fclose($fp);
@@ -79,7 +83,17 @@ function processVideo($id, $title, $video)
         $quality = urldecode($params['quality']);
 
         if (strpos($type, 'video/mp4') == 0) {
-            $realURL = $url;
+            if (strpos($url, 'signature') === false) {
+                if (isset($params['sig'])) {
+                    $sig = urldecode($params['sig']);
+                    $realURL = sprintf("%s&signature=%s", $url, $sig);
+                } else {
+                    echo "$id $title no signature or sig \n";
+                }
+            } else {
+                $realURL = $url;
+            }
+
             if ($quality === 'medium') {
                 break;
             }
@@ -95,7 +109,6 @@ function processVideo($id, $title, $video)
 
     downloadVideo($id, $title, $realURL, $video);
 }
-
 
 
 // "youtube.txt" is the file that you use browser to save the page of your favorite videos.
@@ -120,7 +133,7 @@ $songs = $json['contents']['twoColumnBrowseResultsRenderer']['tabs'][0]
 for ($i = 0; $i < sizeof($songs); $i++) {
     $title = $songs[$i]['playlistVideoRenderer']['title']['simpleText'];
     $title = mb_convert_encoding($title, "big5", "utf-8");
-    $title = str_replace([' ', '?'], ['', ''], $title);
+    $title = str_replace([' ', '?', '/'], ['', '', ''], $title);
 
     $id = $songs[$i]['playlistVideoRenderer']['videoId'];
 
@@ -130,5 +143,5 @@ for ($i = 0; $i < sizeof($songs); $i++) {
 
     processVideo($id, $title, $video);
 
-    sleep(10);
+    sleep(60);
 }
